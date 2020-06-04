@@ -12,14 +12,14 @@ Currently supported datasets are
 Datasets are constructed and used following the pytorch
 data.utils.data.Dataset paradigm, and have the signature
 
-fgvcdata.Dataset(root='path/to/data/root'[,transform,target_transform,train])
+fgvcdata.Dataset(root='path/to/data/'[,transform[,target_transform[,train]]])
 
 `root` is the path to the base folder for the dataset. Additionally, `root` can
 end in `/train` or `/test`, to indicate whether to use train or test data --
 even if the root folder does not contain `train` or `test` subfolders.
 
 The use of training or test data can also be specified through the use of the
-`train` flag (the path extension on `root` takes precendence).
+`train` flag (the path extension on `root` takes precedence).
 
 `transform` and `target_transform` are optional callables that preprocess data
 and targets respectively. It is common to use the torchvision.transforms

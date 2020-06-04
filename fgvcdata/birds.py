@@ -4,7 +4,7 @@ from PIL import Image
 from .base import _BaseDataset
 
 
-__all__ = ['CUB', 'CUBPlus', 'NABirds', 'InatCUBVal']
+__all__ = ['CUB', 'CUBPlus', 'NABirds']
 
 
 def _parse_ints(vals):
@@ -74,43 +74,14 @@ class _BirdData(_BaseDataset):
 
 
 class NABirds(_BirdData):
-    '''The NA Birds dataset, consisting of 555 categories of birds'''
+    '''The NABirds dataset, consisting of 555 categories of birds'''
 
 
 class CUB(_BirdData):
-    '''The classic CUB Birds dataset, consisting of 200 categories of birds'''
+    '''The classic CUB birds dataset, consisting of 200 categories of birds'''
 
 
 class CUBPlus(_BirdData):
-    '''The CUB Birds dataset with expert-validated labels'''
-    image_class_labels_file = 'EXPERT_IMAGE_CLASS_LABELS.txt'
-
-
-def _read_inat_file(fname):
-    with open(fname) as f:
-        lines = f.read().strip().split('\n')
-    imgs, labels = [], []
-    for line in sorted(lines):
-        lab, img = line.split('/')
-        imgs.append(line)
-        labels.append(lab)
-    return imgs, labels
-
-
-class InatCUBVal(_BaseDataset):
-    def __init__(self, root, transform=None, target_transform=None,
-                 data_file='images-full.txt'):
-        self.root = Path(root)
-        if self.root.name == 'test':
-            self.root = self.root.parent
-        self.transform = transform
-        self.target_transform = target_transform
-
-        self.imfolder = 'images'
-
-        images, labels = _read_inat_file(self.root/data_file)
-        self.classes = sorted(list(set(labels)))
-        self.class_to_idx = {c:i for i, c in enumerate(self.classes)}
-        self.targets = [self.class_to_idx[c] for c in labels]
-        self.imgs = images
+    '''The CUB++ birds dataset with expert-validated labels'''
+    image_class_labels_file = 'cubplus_image_class_labels.txt'
 
