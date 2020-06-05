@@ -24,26 +24,26 @@ def _read_split(fname):
 
 
 class OxfordFlowers(_BaseDataset):
-    '''The Oxford Flowers datasets, consisting of 102 categories of flower'''
+    '''The Oxford Flowers dataset, consisting of 102 categories of flower.
+    
+    https://www.robots.ox.ac.uk/~vgg/data/flowers/102/index.html
+    '''
+    name = 'Oxford Flowers 102'
     label_file = 'imagelabels.mat'
     split_file = 'setid.mat'
-        
-    def __init__(self, root, transform=None, target_transform=None, train=True):
-        self.root = Path(root)
-        if self.root.name == 'train':
-            is_train = True
-            self.root = self.root.parent
-        elif self.root.name == 'test':
-            is_train = False
-            self.root = self.root.parent
-        else:
-            is_train = train
-        self.transform = transform
-        self.target_transform = target_transform
-        self.train = is_train
+    url_files = {
+        '102flowers.tgz':
+        'https://www.robots.ox.ac.uk/~vgg/data/flowers/102/102flowers.tgz',
+        'imagelabels.mat':
+        'https://www.robots.ox.ac.uk/~vgg/data/flowers/102/imagelabels.mat',
+        'setid.mat':
+        'https://www.robots.ox.ac.uk/~vgg/data/flowers/102/setid.mat',
+        'README.txt':
+        'https://www.robots.ox.ac.uk/~vgg/data/flowers/102/README.txt',
+    }
 
+    def _setup(self):
         self.imfolder = 'jpg'
-
         files = sorted([x.name for x in
                         self.root.joinpath(self.imfolder).iterdir()])
         labels = _read_labels(self.root/self.label_file)
@@ -53,7 +53,7 @@ class OxfordFlowers(_BaseDataset):
 
         imgs, targets = [], []
         for im, targ in zip(files, labels):
-            if split[int(im[6:11])] == is_train:
+            if split[int(im[6:11])] == self.train:
                 imgs.append(im)
                 targets.append(class_to_idx[targ])
         self.imgs = imgs

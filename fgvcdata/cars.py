@@ -23,27 +23,26 @@ def _read_class_file(fname):
 
 
 class StanfordCars(_BaseDataset):
-    '''The Stanford Cars datasets, consisting of 196 categories of cars'''
+    '''The Stanford Cars dataset, consisting of 196 categories of cars.
+    
+    https://ai.stanford.edu/~jkrause/cars/car_dataset.html
+    '''
+    name = 'Stanford Cars'
     train_anno_file = 'devkit/cars_train_annos.mat'
     test_anno_file = 'devkit/cars_test_annos_withlabels.mat'
     class_file = 'devkit/cars_meta.mat'
+    url_files = {
+        'cars_train.tgz':
+        'http://imagenet.stanford.edu/internal/car196/cars_train.tgz',
+        'cars_test.tgz':
+        'http://imagenet.stanford.edu/internal/car196/cars_test.tgz',
+        'car_devkit.tgz':
+        'https://ai.stanford.edu/~jkrause/cars/car_devkit.tgz',
+    }
         
-    def __init__(self, root, transform=None, target_transform=None, train=True):
-        self.root = Path(root)
-        if self.root.name in ['cars_train', 'train']:
-            is_train = True
-            self.root = self.root.parent
-        elif self.root.name in ['cars_test', 'test']:
-            is_train = False
-            self.root = self.root.parent
-        else:
-            is_train = train
-        self.transform = transform
-        self.target_transform = target_transform
-        self.train = is_train
-
-        self.imfolder = 'cars_' + ('train' if is_train else 'test')
-        anno_file = self.train_anno_file if is_train else self.test_anno_file
+    def _setup(self):
+        self.imfolder = 'cars_' + ('train' if self.train else 'test')
+        anno_file = self.train_anno_file if self.train else self.test_anno_file
 
         files, labels = _read_anno_file(self.root/anno_file)
         classes, class_to_idx = _read_class_file(self.root/self.class_file)

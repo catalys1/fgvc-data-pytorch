@@ -17,26 +17,27 @@ def _read_anno_file(fname):
 
 class StanfordDogs(_BaseDataset):
     '''The Stanford Dogs dataset, consisting of 120 categories of dog sourced
-    from ImageNet'''
+    from ImageNet.
+    
+    http://vision.stanford.edu/aditya86/ImageNetDogs/
+    '''
+    name = 'Stanford Dogs'
     train_anno_file = 'train_list.mat'
     test_anno_file = 'test_list.mat'
+    url_files = {
+        'images.tar':
+        'http://vision.stanford.edu/aditya86/ImageNetDogs/images.tar',
+        'annotations.tar':
+        'http://vision.stanford.edu/aditya86/ImageNetDogs/annotation.tar',
+        'lists.tar':
+        'http://vision.stanford.edu/aditya86/ImageNetDogs/lists.tar',
+        'README.txt':
+        'http://vision.stanford.edu/aditya86/ImageNetDogs/README.txt',
+    }
         
-    def __init__(self, root, transform=None, target_transform=None, train=True):
-        self.root = Path(root)
-        if self.root.name == 'train':
-            is_train = True
-            self.root = self.root.parent
-        elif self.root.name == 'test':
-            is_train = False
-            self.root = self.root.parent
-        else:
-            is_train = train
-        self.transform = transform
-        self.target_transform = target_transform
-        self.train = is_train
-
+    def _setup(self):
         self.imfolder = 'Images'
-        anno_file = self.train_anno_file if is_train else self.test_anno_file
+        anno_file = self.train_anno_file if self.train else self.test_anno_file
 
         files, labels = _read_anno_file(self.root/anno_file)
 

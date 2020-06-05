@@ -29,20 +29,7 @@ class _BirdData(_BaseDataset):
     class_names_file = 'classes.txt'
     image_class_labels_file = 'image_class_labels.txt'
 
-    def __init__(self, root, transform=None, target_transform=None, train=True):
-        self.root = Path(root)
-        if self.root.name == 'train':
-            is_train = True
-            self.root = self.root.parent
-        elif self.root.name == 'test':
-            is_train = False
-            self.root = self.root.parent
-        else:
-            is_train = train
-        self.transform = transform
-        self.target_transform = target_transform
-        self.train = is_train
-
+    def _setup(self):
         self.imfolder = 'images'
 
         images = _read_file(self.root/self.image_file)
@@ -53,7 +40,7 @@ class _BirdData(_BaseDataset):
         imgs, targets = [], []
         cls = set()
         for id in sorted(images.keys()):
-            if id in labels and split[id] == is_train:
+            if id in labels and split[id] == self.train:
                 imgs.append(images[id])
                 targets.append(labels[id])
                 cls.add(labels[id])
@@ -74,14 +61,35 @@ class _BirdData(_BaseDataset):
 
 
 class NABirds(_BirdData):
-    '''The NABirds dataset, consisting of 555 categories of birds'''
+    '''The NABirds dataset, consisting of 555 categories of birds.
+    
+    https://dl.allaboutbirds.org/nabirds
+    '''
+    name = 'NABirds'
 
 
 class CUB(_BirdData):
-    '''The classic CUB birds dataset, consisting of 200 categories of birds'''
+    '''The classic CUB birds dataset, consisting of 200 categories of birds.
+    
+    http://www.vision.caltech.edu/visipedia/CUB-200.html
+    '''
+    name = 'Caltech UCSD Birds (CUB)'
+    url_files = {
+        'images.tgz':
+        'http://www.vision.caltech.edu/visipedia-data/CUB-200/images.tgz',
+        'lists.tgz':
+        'http://www.vision.caltech.edu/visipedia-data/CUB-200/lists.tgz',
+        'annotations.tgz':
+        'http://www.vision.caltech.edu/visipedia-data/CUB-200/annotations.tgz',
+        'attributes.tgz':
+        'http://www.vision.caltech.edu/visipedia-data/CUB-200/attributes.tgz',
+        'README.txt':
+        'http://www.vision.caltech.edu/visipedia-data/CUB-200/README.txt'
+    }
 
 
-class CUBPlus(_BirdData):
-    '''The CUB++ birds dataset with expert-validated labels'''
+class CUBPlus(CUB):
+    '''The CUB++ birds dataset -- CUB with expert-validated labels'''
+    name = 'Caltech UCSD Birds (CUB++)'
     image_class_labels_file = 'cubplus_image_class_labels.txt'
 

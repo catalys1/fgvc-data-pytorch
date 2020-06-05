@@ -18,25 +18,17 @@ def _read_file(fname):
 class Aircraft(_BaseDataset):
     '''The Oxford FGVC Aircraft dataset, consisting of 100 categories of
     aircraft'''
+    name = 'FGVC Aircraft'
     train_file = 'data/images_variant_trainval.txt'
     test_file = 'data/images_variant_test.txt'
+    url_files = {
+        'fgvc-aircraft-2013b.tar.gz':
+        'http://www.robots.ox.ac.uk/~vgg/data/fgvc-aircraft/archives/fgvc-aircraft-2013b.tar.gz'
+    }
         
-    def __init__(self, root, transform=None, target_transform=None, train=True):
-        self.root = Path(root)
-        if self.root.name == 'train':
-            is_train = True
-            self.root = self.root.parent
-        elif self.root.name == 'test':
-            is_train = False
-            self.root = self.root.parent
-        else:
-            is_train = train
-        self.transform = transform
-        self.target_transform = target_transform
-        self.train = is_train
-
+    def _setup(self):
         self.imfolder = 'data/images'
-        anno_file = self.train_file if is_train else self.test_file
+        anno_file = self.train_file if self.train else self.test_file
 
         files, labels = _read_file(self.root/anno_file)
         classes = sorted(list(set(labels)))
