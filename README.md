@@ -45,3 +45,13 @@ These are the currently available datasets:
 - [North American Birds (NABirds)](https://dl.allaboutbirds.org/nabirds)
 
 These datasets are publicly available online for use in research; we do not host or distribute them, or make any claims about their quality or fairness.
+
+### Accessing the Data
+
+The images and metadata for most of the datasets can be downloaded directly through the library, similar to `torchvision.datasets`. Further processing shouldn't be necessary.
+
+The dataset classes in this package expect the data to be organized inside a root folder, containing the various image folders and metadata files in the same form as they are presented for download by the dataset host.
+
+## Contributing
+
+Contributions are welcome! Please feel free to open issues related to bug fixes, or to fix them and submit a pull request. I'd also be happy to discuss updates/changes to the library to make it more useful/usable, as well as for adding new datasets -- feel free to open an issue.
