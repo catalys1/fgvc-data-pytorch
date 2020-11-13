@@ -31,7 +31,7 @@ class _BaseDataset(object):
         if self.root.name == 'train':
             is_train = True
             self.root = self.root.parent
-        elif self.root.name == 'test':
+        elif self.root.name in ['test', 'val']:
             is_train = False
             self.root = self.root.parent
         else:
@@ -61,9 +61,8 @@ class _BaseDataset(object):
         return img, target
 
     def __repr__(self):
-        head = '{} Dataset ({}.{})'.format(self.name,
-                                           self.__class__.__module__,
-                                           self.__class__.__name__)
+        head = '{} Dataset ({}.{})'.format(
+            self.name, self.__class__.__module__, self.__class__.__name__)
         body = ['Images: {}'.format(len(self)),
                 'Root: {}'.format(str(self.root)),
                 'Transform: {}'.format(self.transform)]
@@ -76,4 +75,3 @@ class _BaseDataset(object):
             return
         for fname, url in self.url_files.items():
             download_and_extract(url, self.root, filename=fname)
-
