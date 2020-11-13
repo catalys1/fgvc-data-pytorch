@@ -17,7 +17,10 @@ def _read_file(fname):
 
 class Aircraft(_BaseDataset):
     '''The Oxford FGVC Aircraft dataset, consisting of 100 categories of
-    aircraft'''
+    aircraft.
+    
+    http://www.robots.ox.ac.uk/~vgg/data/fgvc-aircraft/
+    '''
     name = 'FGVC Aircraft'
     train_file = 'data/images_variant_trainval.txt'
     test_file = 'data/images_variant_test.txt'
