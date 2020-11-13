@@ -5,7 +5,7 @@ from scipy.io import loadmat
 from .base import _BaseDataset
 
 
-__all__ = ['StanfordDogs']
+__all__ = ['StanfordDogs', 'TsinghuaDogs']
 
 
 def _read_anno_file(fname):
@@ -52,3 +52,36 @@ class StanfordDogs(_BaseDataset):
         self.classes = list(class_to_idx.keys())
         self.class_to_idx = class_to_idx
 
+
+class TsinghuaDogs(_BaseDataset):
+    '''The Tsinghua Dogs dataset, consisting of 130 categories of dog.
+
+    https://cg.cs.tsinghua.edu.cn/ThuDogs/
+    '''
+    name = 'Tsinghua Dogs'
+    train_anno_file = 'TrainAndValList/train.lst'
+    val_anno_file = 'TrainAndValList/validation.lst'
+
+    def _setup(self):
+        self.imfolder = 'low-resolution'
+        anno_file = self.train_anno_file if self.train else self.val_anno_file
+
+        # odd byte at beginning of file, thats why [1:]
+        files = open(self.root/anno_file).read().strip().split('\n')[1:]
+        files = [x[3:] for x in files] # remove ".//" prefix
+        files.sort()
+
+        imgs, targets = [], []
+        class_to_idx = {}
+        i = 0
+        for f in files:
+            targ = f.split('/')[0]
+            if targ not in class_to_idx:
+                class_to_idx[targ] = i
+                i += 1
+            imgs.append(f)
+            targets.append(class_to_idx[targ])
+        self.imgs = imgs
+        self.targets = targets
+        self.classes = list(class_to_idx.keys())
+        self.class_to_idx = class_to_idx
