@@ -30,17 +30,10 @@ from .cars import *
 from .dogs import *
 from .aircraft import *
 from .flowers import *
-import torch
-from types import SimpleNamespace
-from pathlib import Path
-import torchvision
-import torchvision.transforms as T
 
 
 IMAGENET_STATS = ((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
 
-
 datasets = []
 for f in [birds,cars,dogs,aircraft,flowers]:
     datasets += f.__all__
-
