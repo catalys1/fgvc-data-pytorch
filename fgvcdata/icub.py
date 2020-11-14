@@ -20,9 +20,10 @@ def _read_inat_file(fname):
 
 class InatCUBVal(_BaseDataset):
     def __init__(self, root, transform=None, target_transform=None,
-                 data_file='images-full.txt'):
+                 train=False, data_file='images-100.txt'):
+        # train is ignored, there for compatibility
         self.root = Path(root)
-        if self.root.name == 'test':
+        if self.root.name in ['train', 'val', 'test']:
             self.root = self.root.parent
         self.transform = transform
         self.target_transform = target_transform

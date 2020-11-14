@@ -30,6 +30,7 @@ from .cars import *
 from .dogs import *
 from .aircraft import *
 from .flowers import *
+from .icub import *
 
 
 IMAGENET_STATS = ((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
