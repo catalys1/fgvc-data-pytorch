@@ -36,5 +36,5 @@ from .icub import *
 IMAGENET_STATS = ((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
 
 datasets = []
-for f in [birds,cars,dogs,aircraft,flowers]:
+for f in [birds,icub,cars,dogs,aircraft,flowers]:
     datasets += f.__all__
