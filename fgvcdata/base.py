@@ -49,8 +49,12 @@ class _BaseDataset(object):
     def __len__(self):
         return len(self.imgs)
 
+    def filepath(self, index):
+        '''Returns Path to image in ``self.imgs[index]``'''
+        return self.root / self.imfolder / self.imgs[index]
+
     def __getitem__(self, index):
-        path = self.root/self.imfolder/self.imgs[index]
+        path = self.filepath(index)
         target = self.targets[index]
         img = Image.open(path).convert('RGB')
         if self.transform is not None:
