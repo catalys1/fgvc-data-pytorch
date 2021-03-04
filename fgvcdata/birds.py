@@ -28,6 +28,7 @@ class _BirdData(_BaseDataset):
     train_test_split_file = 'train_test_split.txt'
     class_names_file = 'classes.txt'
     image_class_labels_file = 'image_class_labels.txt'
+    bounding_box_file = 'bounding_boxes.txt'
 
     def _setup(self):
         self.imfolder = 'images'
@@ -58,6 +59,14 @@ class _BirdData(_BaseDataset):
         self.classes = [x[0] for x in sorted(self.class_to_idx.items(),
                                              key=lambda a:a[1])]
         self.targets = [idx_shift[i] for i in self.targets]
+
+        if self.load_bboxes:
+            boxes = _read_file(self.root/self.bounding_box_file)
+            bboxes = []
+            for id in sorted(images.keys()):
+                if id in labels and split[id] == self.train:
+                    bboxes.append([float(x) for x in boxes[id].split(' ')])
+            self.bboxes = bboxes
 
 
 class NABirds(_BirdData):

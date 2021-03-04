@@ -43,6 +43,8 @@ class OxfordFlowers(_BaseDataset):
     }
 
     def _setup(self):
+        if self.load_bboxes:
+            raise AttributeError('Oxford Flowers does not have any available bounding boxes')
         self.imfolder = 'jpg'
         files = sorted([x.name for x in
                         self.root.joinpath(self.imfolder).iterdir()])

@@ -26,7 +26,7 @@ def download_and_extract(url, download_root, extract_root=None, filename=None,
 class _BaseDataset(object):
     '''Base class for FGVC datasets. Should not be used directly.'''
     def __init__(self, root, transform=None, target_transform=None, train=True,
-                 download=False):
+                 download=False, load_bboxes=False):
         self.root = Path(root)
         if self.root.name == 'train':
             is_train = True
@@ -39,6 +39,7 @@ class _BaseDataset(object):
         self.transform = transform
         self.target_transform = target_transform
         self.train = is_train
+        self.load_bboxes = load_bboxes
 
         if download: self.download()
         self._setup()

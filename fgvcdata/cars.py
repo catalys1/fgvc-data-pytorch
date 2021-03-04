@@ -10,9 +10,13 @@ __all__ = ['StanfordCars']
 
 def _read_anno_file(fname):
     anno = loadmat(fname)['annotations'][0]
-    files = [x[5].item() for x in anno]
-    targets = [x[4].item() for x in anno]
-    return files, targets
+    files, targets, boxes = [], [], []
+    for x in anno:
+        files.append(x[5].item())
+        targets.append(x[4].item())
+        x1, y1, x2, y2 = [float(x[i].item())-1 for i in range(4)]
+        boxes.append([x1, y1, x2-x1, y2-y1])
+    return files, targets, boxes
 
 
 def _read_class_file(fname):
@@ -44,15 +48,15 @@ class StanfordCars(_BaseDataset):
         self.imfolder = 'cars_' + ('train' if self.train else 'test')
         anno_file = self.train_anno_file if self.train else self.test_anno_file
 
-        files, labels = _read_anno_file(self.root/anno_file)
+        imgs, targets, bboxes = _read_anno_file(self.root/anno_file)
         classes, class_to_idx = _read_class_file(self.root/self.class_file)
 
-        imgs, targets = [], []
-        for im, targ in zip(files, labels):
-            imgs.append(im)
-            targets.append(targ - 1)
+        targets = [x-1 for x in targets]
+        
         self.imgs = imgs
         self.targets = targets
         self.classes = classes
         self.class_to_idx = class_to_idx
 
+        if self.load_bboxes:
+            self.bboxes = bboxes

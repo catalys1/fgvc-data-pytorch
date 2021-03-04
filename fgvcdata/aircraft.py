@@ -24,6 +24,7 @@ class Aircraft(_BaseDataset):
     name = 'FGVC Aircraft'
     train_file = 'data/images_variant_trainval.txt'
     test_file = 'data/images_variant_test.txt'
+    bounding_box_file = 'data/images_box.txt'
     url_files = {
         'fgvc-aircraft-2013b.tar.gz':
         'http://www.robots.ox.ac.uk/~vgg/data/fgvc-aircraft/archives/fgvc-aircraft-2013b.tar.gz'
@@ -46,3 +47,13 @@ class Aircraft(_BaseDataset):
         self.classes = classes
         self.class_to_idx = class_to_idx
 
+        if self.load_bboxes:
+            names, boxes = _read_file(self.root/self.bounding_box_file)
+            boxes = {n+'.jpg': b for n, b in zip(names, boxes)}
+            bboxes = []
+            for im in self.imgs:
+                box = [float(x) for x in boxes[im].split(' ')]
+                # x1,y1,x2,y2 -> x1,y1,w,h
+                box[2], box[3] = box[2]-box[0], box[3]-box[1] 
+                bboxes.append()
+            self.bboxes = bboxes

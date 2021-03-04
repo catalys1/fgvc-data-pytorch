@@ -2,6 +2,7 @@ import torch, torchvision
 from pathlib import Path
 from PIL import Image
 from scipy.io import loadmat
+import re
 from .base import _BaseDataset
 
 
@@ -51,6 +52,18 @@ class StanfordDogs(_BaseDataset):
         self.targets = targets
         self.classes = list(class_to_idx.keys())
         self.class_to_idx = class_to_idx
+
+        if self.load_bboxes:
+            anno = loadmat(self.root/anno_file)['annotation_list']
+            regex = r'<xmin>(\d+)</xmin>.*<ymin>(\d+)</ymin>.*<xmax>(\d*)</xmax>.*<ymax>(\d+)</ymax>'
+            regex = re.compile(regex, flags=re.DOTALL)
+            boxes = []
+            for a in anno:
+                path = self.root.joinpath('Annotation', a[0].item())
+                content = open(path).read()
+                x1, y1, x2, y2 = [float(x) for x in re.search(regex, content).groups()]
+                boxes.append([x1, y1, x2-x1, y2-y1])
+            self.bboxes = boxes
 
 
 class TsinghuaDogs(_BaseDataset):
