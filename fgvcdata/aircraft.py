@@ -1,6 +1,8 @@
-import torch, torchvision
 from pathlib import Path
+
 from PIL import Image
+import torch, torchvision
+
 from .base import _BaseDataset
 
 
@@ -55,5 +57,5 @@ class Aircraft(_BaseDataset):
                 box = [float(x) for x in boxes[im].split(' ')]
                 # x1,y1,x2,y2 -> x1,y1,w,h
                 box[2], box[3] = box[2]-box[0], box[3]-box[1] 
-                bboxes.append()
+                bboxes.append(box)
             self.bboxes = bboxes

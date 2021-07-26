@@ -1,6 +1,8 @@
-import torch, torchvision
 from pathlib import Path
+
 from PIL import Image
+import torch, torchvision
+
 from .base import _BaseDataset
 
 
@@ -19,8 +21,12 @@ def _read_inat_file(fname):
 
 
 class InatCUBVal(_BaseDataset):
-    def __init__(self, root, transform=None, target_transform=None,
-                 train=False, data_file='images-100.txt'):
+
+    name = 'iCub'
+    image_file = 'images.txt'
+    bounding_box_file = 'bounding_boxes.txt'
+
+    def __init__(self, root, transform=None, target_transform=None, train=False, load_bboxes=False):
         # train is ignored, there for compatibility
         self.root = Path(root)
         if self.root.name in ['train', 'val', 'test']:
@@ -30,9 +36,15 @@ class InatCUBVal(_BaseDataset):
 
         self.imfolder = 'images'
 
-        images, labels = _read_inat_file(self.root/data_file)
+        images, labels = _read_inat_file(self.root/self.image_file)
         self.classes = sorted(list(set(labels)))
         self.class_to_idx = {c:i for i, c in enumerate(self.classes)}
         self.targets = [self.class_to_idx[c] for c in labels]
         self.imgs = images
 
+        if load_bboxes:
+            boxes = open(self.root/self.bounding_box_file).read().strip().split('\n')
+            bboxes = []
+            for box in boxes:
+                bboxes.append([float(x) for x in box.split(' ')])
+            self.bboxes = bboxes

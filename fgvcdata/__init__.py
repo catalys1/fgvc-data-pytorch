@@ -8,6 +8,7 @@ Currently supported datasets are
 - Stanford Dogs
 - Oxford Flowers
 - Oxford FGVC Aircraft
+- Tsinghua Dogs
 
 Datasets are constructed and used following the pytorch
 data.utils.data.Dataset paradigm, and have the signature

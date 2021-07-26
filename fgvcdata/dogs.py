@@ -1,8 +1,10 @@
-import torch, torchvision
+import json
 from pathlib import Path
+
 from PIL import Image
 from scipy.io import loadmat
-import re
+import torch, torchvision
+
 from .base import _BaseDataset
 
 
@@ -16,6 +18,33 @@ def _read_anno_file(fname):
     return files, targets
 
 
+def _load_bbox_anno_files(filelist, tag='bndbox'):
+    import xml.etree.ElementTree as etree
+    boxes = []
+    for f in filelist:
+        root = etree.parse(f).getroot()
+        elements = root.findall(f'.//{tag}')
+        # some images have multiple bounding boxes
+        bbs = []
+        for el in elements:
+            x1, y1, x2, y2 = [float(x.text) for x in el.findall('.//')]
+            bbs.append([x1, y1, x2-x1, y2-y1])
+        boxes.append(bbs)
+    return boxes
+
+
+def _load_bbox_json(fname):
+    return json.load(open(fname))
+
+
+def _cache_bbox_json(boxes, fname):
+    try:
+        json.dump(boxes, open(fname, 'w'))
+    except PermissionError as e:
+        print('Unable to cache bounding boxes (permission denied)')
+        print(e)
+
+
 class StanfordDogs(_BaseDataset):
     '''The Stanford Dogs dataset, consisting of 120 categories of dog sourced
     from ImageNet.
@@ -25,6 +54,8 @@ class StanfordDogs(_BaseDataset):
     name = 'Stanford Dogs'
     train_anno_file = 'train_list.mat'
     test_anno_file = 'test_list.mat'
+    train_bounding_box_file = 'train_bbox.json'
+    test_bounding_box_file = 'test_bbox.json'
     url_files = {
         'images.tar':
         'http://vision.stanford.edu/aditya86/ImageNetDogs/images.tar',
@@ -54,16 +85,16 @@ class StanfordDogs(_BaseDataset):
         self.class_to_idx = class_to_idx
 
         if self.load_bboxes:
-            anno = loadmat(self.root/anno_file)['annotation_list']
-            regex = r'<xmin>(\d+)</xmin>.*<ymin>(\d+)</ymin>.*<xmax>(\d*)</xmax>.*<ymax>(\d+)</ymax>'
-            regex = re.compile(regex, flags=re.DOTALL)
-            boxes = []
-            for a in anno:
-                path = self.root.joinpath('Annotation', a[0].item())
-                content = open(path).read()
-                x1, y1, x2, y2 = [float(x) for x in re.search(regex, content).groups()]
-                boxes.append([x1, y1, x2-x1, y2-y1])
-            self.bboxes = boxes
+            bbox_file = self.root.joinpath(self.train_bounding_box_file if self.train
+                                           else self.test_bounding_box_file)
+            if bbox_file.is_file():
+                self.bboxes = _load_bbox_json(bbox_file)
+            else:
+                anno = loadmat(self.root/anno_file)['annotation_list']
+                paths = [self.root.joinpath('Annotation', a[0].item()) for a in anno]
+                bboxes = _load_bbox_anno_files(paths)
+                _cache_bbox_json(bboxes, bbox_file)
+                self.bboxes = bboxes
 
 
 class TsinghuaDogs(_BaseDataset):
@@ -74,6 +105,8 @@ class TsinghuaDogs(_BaseDataset):
     name = 'Tsinghua Dogs'
     train_anno_file = 'TrainAndValList/train.lst'
     val_anno_file = 'TrainAndValList/validation.lst'
+    train_bounding_box_file = 'train_bbox.json'
+    test_bounding_box_file = 'test_bbox.json'
 
     def _setup(self):
         self.imfolder = 'low-resolution'
@@ -98,3 +131,14 @@ class TsinghuaDogs(_BaseDataset):
         self.targets = targets
         self.classes = list(class_to_idx.keys())
         self.class_to_idx = class_to_idx
+
+        if self.load_bboxes:
+            bbox_file = self.root.joinpath(self.train_bounding_box_file if self.train
+                                           else self.test_bounding_box_file)
+            if bbox_file.is_file():
+                self.bboxes = _load_bbox_json(bbox_file)
+            else:
+                paths = [self.root.joinpath('Low-Annotations', x+'.xml') for x in self.imgs]
+                bboxes = _load_bbox_anno_files(paths, 'bodybndbox')
+                _cache_bbox_json(bboxes, bbox_file)
+                self.bboxes = bboxes
