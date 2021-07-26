@@ -82,20 +82,14 @@ class NABirds(_BirdData):
 class CUB(_BirdData):
     '''The classic CUB birds dataset, consisting of 200 categories of birds.
     
-    http://www.vision.caltech.edu/visipedia/CUB-200.html
+    http://www.vision.caltech.edu/visipedia/CUB-200-2011.html
     '''
     name = 'Caltech UCSD Birds (CUB)'
     url_files = {
-        'images.tgz':
-        'http://www.vision.caltech.edu/visipedia-data/CUB-200/images.tgz',
-        'lists.tgz':
-        'http://www.vision.caltech.edu/visipedia-data/CUB-200/lists.tgz',
-        'annotations.tgz':
-        'http://www.vision.caltech.edu/visipedia-data/CUB-200/annotations.tgz',
-        'attributes.tgz':
-        'http://www.vision.caltech.edu/visipedia-data/CUB-200/attributes.tgz',
+        'CUB_200_2011.tgz':
+            'http://www.vision.caltech.edu/visipedia-data/CUB-200-2011/CUB_200_2011.tgz',
         'README.txt':
-        'http://www.vision.caltech.edu/visipedia-data/CUB-200/README.txt'
+            'http://www.vision.caltech.edu/visipedia-data/CUB-200-2011/README.txt'
     }
 
 
