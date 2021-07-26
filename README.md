@@ -21,12 +21,11 @@ The purposes of this package are
 
 ## Installation
 
-Currently, the best method of installation is to clone this repository and
-install with `pip` in editable mode:
+Install with `pip`
 ```bash
-git clone https://github.com/catalys1/fgvc-data-pytorch.git
-pip install -e fgvc-data-pytorch
+pip install fgvcdata
 ```
+
 The fgvcdata package should now be available:
 ```python
 >>> import fgvcdata
