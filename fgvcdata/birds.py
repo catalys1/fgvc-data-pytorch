@@ -80,7 +80,7 @@ class NABirds(_BirdData):
 
 
 class CUB(_BirdData):
-    '''The classic CUB birds dataset, consisting of 200 categories of birds.
+    '''The classic CUB dataset, consisting of 200 categories of birds.
     
     http://www.vision.caltech.edu/visipedia/CUB-200-2011.html
     '''
@@ -94,7 +94,7 @@ class CUB(_BirdData):
 
 
 class CUBPlus(CUB):
-    '''The CUB++ birds dataset -- CUB with expert-validated labels'''
+    '''The CUB++ dataset: CUB with expert-validated labels'''
     name = 'Caltech UCSD Birds (CUB++)'
     image_class_labels_file = 'cubplus_image_class_labels.txt'
 
