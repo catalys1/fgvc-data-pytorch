@@ -23,14 +23,19 @@ The use of training or test data can also be specified through the use of the
 `train` flag (the path extension on `root` takes precedence).
 
 `transform` and `target_transform` are optional callables that preprocess data
-and targets respectively. It is common to use the torchvision.transforms
-module for this.
+and targets respectively; for instance, torchvision.transforms.
 '''
+from . import birds
 from .birds import *
+from . import cars
 from .cars import *
+from . import dogs
 from .dogs import *
+from . import aircraft
 from .aircraft import *
+from . import flowers
 from .flowers import *
+from . import icub
 from .icub import *
 
 
