@@ -32,10 +32,11 @@ from .dogs import *
 from .aircraft import *
 from .flowers import *
 from .icub import *
+from .fungi import *
 
 
 IMAGENET_STATS = ((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
 
 datasets = []
-for f in [birds,icub,cars,dogs,aircraft,flowers]:
+for f in [birds,icub,cars,dogs,aircraft,flowers,fungi]:
     datasets += f.__all__
