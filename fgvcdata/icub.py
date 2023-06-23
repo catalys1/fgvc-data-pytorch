@@ -6,7 +6,7 @@ import torch, torchvision
 from .base import _BaseDataset
 
 
-__all__ = ['InatCUBVal']
+__all__ = ['InatCUB']
 
 
 def _read_inat_file(fname):
@@ -20,7 +20,7 @@ def _read_inat_file(fname):
     return imgs, labels
 
 
-class InatCUBVal(_BaseDataset):
+class InatCUB(_BaseDataset):
 
     name = 'iCub'
     image_file = 'images.txt'
