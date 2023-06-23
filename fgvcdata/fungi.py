@@ -54,7 +54,7 @@ def parse_csv(fpath,wanted_key_list):
 def get_images_classes_and_labels( db_data ):
     
     imgs = [x['image_path'] for x in db_data]
-    images = dict([ (i,'images/'+img) for i,img in zip(range(1,len(imgs)+1),imgs)])
+    images = dict([ (i,img) for i,img in zip(range(1,len(imgs)+1),imgs)])
     lbls = [x['species']+' ('+str(x['taxonID'])+')' for x in db_data]
     classes = sorted(set(lbls))
     classes = dict([ (i,cl) for i,cl in zip(range(1,len(classes)+1),list(classes)) ])
@@ -68,7 +68,7 @@ class DanishFungi(_BaseDataset):
     https://sites.google.com/view/danish-fungi-dataset
     Contains 32753 training images and 3640 test images across 139 categories.
     '''
-
+    name = 'DanishFungi'
     TRAIN_FILE = 'DF20M-train_metadata_PROD.csv'
     TEST_FILE  = 'DF20M-public_test_metadata_PROD.csv'
     KEY_LIST   = [('ImageUniqueID',str),('image_path',str),('taxonID',lambda x:int(float(x))),('species',str)]
